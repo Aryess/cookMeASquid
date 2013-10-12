@@ -13,10 +13,5 @@ This application is my initiative to push the project a bit further, and to prat
 The application is available online [here](http://cookmeasquid.herokuapp.com/) thanks to Heroku
 
 #### Custom install
-If you want to use it on your own webserver, just clone the repo and set up the env variable  `SQUID_SECRET` to a good secured hash:
-
-    export SQUID_SECRET=<my_hash>
-
-([Source](http://railsforum.com/viewtopic.php?id=39909))
-
+If you want to use it on your own webserver, just clone the repo and set up the database
 Then start the server and you're ready to go!
