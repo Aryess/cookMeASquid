@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
-  attr_accessible :age, :email, :login, :name, :surname
+  attr_accessible :age, :email, :login, :name, :surname, :password, :password_confirmation
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]{2,3}\z/i
   VALID_LOGIN_REGEX = /\A[a-zA-Z0-9\-._]+\z/i
   VALID_NAME_REGEX = /\A([[:alpha:]'.\-]+( [[:alpha:]'.\-]+)*)?\z/i
+  has_secure_password
   
   validates :name     , presence: true, length: {maximum: 50},
           format: {with: VALID_NAME_REGEX}

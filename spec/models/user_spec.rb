@@ -9,7 +9,9 @@ describe User do
     surname:"Dupond",
     email:  "alfred.dupond@gmail.com",
     age: 34,
-    login: "Fredo"
+    login: "Fredo",
+    password: "foobar", 
+    password_confirmation: "foobar"
     ) 
   }
   subject { @user }
@@ -19,7 +21,9 @@ describe User do
   it { should respond_to(:email) }
   it { should respond_to(:age) }
   it { should respond_to(:login) }
-  
+  it { should respond_to(:password_digest) }
+  it { should respond_to(:password) }
+  it { should respond_to(:password_confirmation) }
   it { should be_valid }
   
   describe "Name" do
@@ -151,6 +155,27 @@ describe User do
           expect(@user).not_to be_valid
         end
       end
+    end
+  end
+  
+  describe "password" do
+    describe "when not present" do
+      before { @user = User.new(
+        name:   "Alfzerzerred",
+        surname:"Dupzerzerond",
+        email:  "alfrezerzerd.dupond@gmail.com",
+        age: 34,
+        login: "Frezerzerdo",
+        password: " ", 
+        password_confirmation: " "
+        ) 
+      }
+      it { should_not be_valid }
+    end
+    
+    describe "when does not match " do
+      before { @user.password_confirmation = @user.password + "nope" }
+      it {should_not be_valid}
     end
   end
 end
