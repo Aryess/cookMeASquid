@@ -7,12 +7,13 @@ class User < ActiveRecord::Base
   validates :name     , presence: true, length: {maximum: 50},
           format: {with: VALID_NAME_REGEX}
   validates :email    , presence: true, length: {maximum: 254},
-          format: {with: VALID_EMAIL_REGEX}
+          format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
   validates :surname  , presence: true, length: {maximum: 50},
           format: {with: VALID_NAME_REGEX}
   validates :age      , presence: true, numericality: 
           { only_integer: true, greater_than: 0, less_than_or_equal_to: 130 }
   validates :login    , presence: true, length: {maximum: 50},
           format: {with: VALID_LOGIN_REGEX}
-
+  
+  before_save { self.email = email.downcase }
 end
