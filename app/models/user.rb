@@ -15,6 +15,6 @@ class User < ActiveRecord::Base
           { only_integer: true, greater_than: 0, less_than_or_equal_to: 130 }
   validates :login    , presence: true, length: {maximum: 50},
           format: {with: VALID_LOGIN_REGEX}, uniqueness: {case_sensitive: false}
-  
+  validates :password , length: {minimum: 6}
   before_save { self.email = email.downcase }
 end
