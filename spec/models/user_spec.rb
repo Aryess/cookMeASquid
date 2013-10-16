@@ -111,6 +111,8 @@ describe User do
     describe "when not unique" do
       before do
         user_with_same_email = @user.dup
+        user_with_same_email.login = @user.login + "change"
+        user_with_same_email.login = @user.login + "change"
         user_with_same_email.email = @user.email.upcase
         user_with_same_email.save
       end
@@ -156,16 +158,29 @@ describe User do
         end
       end
     end
+    
+    describe "when not unique" do
+      before do
+        user_with_same_login = @user.dup
+        user_with_same_login.email = "change" + @user.email 
+        user_with_same_login.login = @user.login.upcase
+        result = user_with_same_login.save
+        Rails.logger.debug "Anchor " + result.to_s
+        Rails.logger.debug user_with_same_login.inspect
+      end
+  
+      it { should_not be_valid, "User: #{@user.login}" }
+    end
   end
   
   describe "password" do
     describe "when not present" do
       before { @user = User.new(
-        name:   "Alfzerzerred",
-        surname:"Dupzerzerond",
-        email:  "alfrezerzerd.dupond@gmail.com",
+        name:   "Alfred",
+        surname:"Dupond",
+        email:  "alfred.dupond@gmail.com",
         age: 34,
-        login: "Frezerzerdo",
+        login: "Fredo",
         password: " ", 
         password_confirmation: " "
         ) 

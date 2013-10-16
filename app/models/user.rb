@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   validates :age      , presence: true, numericality: 
           { only_integer: true, greater_than: 0, less_than_or_equal_to: 130 }
   validates :login    , presence: true, length: {maximum: 50},
-          format: {with: VALID_LOGIN_REGEX}
+          format: {with: VALID_LOGIN_REGEX}, uniqueness: {case_sensitive: false}
   
   before_save { self.email = email.downcase }
 end
