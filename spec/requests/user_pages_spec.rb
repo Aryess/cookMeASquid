@@ -16,8 +16,8 @@ describe "User pages" do
     describe "with invalid user" do
       before { visit user_path(-1) }
   
-      it { should_not have_content(user.login) }
       it { should have_title("Home") }
+      it { should have_content("Nothing to see here") }
     end
   end
   
