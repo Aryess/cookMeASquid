@@ -19,8 +19,19 @@ class UsersController < ApplicationController
       flash[:success] = "Registration successful!"
       redirect_to @user
     else
-      flash[:error] = "Something went wrong..."
       render 'new'
     end
   end
+  
+  private
+
+    def user_params
+      params.require(:user).permit( :name,
+                                    :surname,
+                                    :age,
+                                    :login,
+                                    :email, 
+                                    :password,
+                                    :password_confirmation)
+    end
 end
