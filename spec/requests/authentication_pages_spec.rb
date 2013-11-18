@@ -32,7 +32,25 @@ describe "Authentication" do
           fill_in "Password", with: user.password
           click_button "Sign in"
         end
-  
+        
+        describe "then trying to access in controller" do
+          describe "new user" do
+            before do
+              sign_in user
+              get new_user_path
+            end
+            specify { expect(response).to redirect_to(root_path) }
+          end
+
+          describe "create user" do
+            before do
+              sign_in user
+              post users_path
+            end
+            specify { expect(response).to redirect_to(root_path) }
+          end
+        end
+
         it { should have_link('Profile',     href: user_path(user)) }
         it { should have_link('Sign out',    href: signout_path) }
         it { should have_link('Settings',    href: edit_user_path(user)) }
@@ -100,6 +118,18 @@ describe "Authentication" do
 
       describe "submitting a PUT request to the Users#update action" do
         before { put user_path(wrong_user) }
+        specify { response.should redirect_to(root_url) }
+      end
+    end
+
+    describe "as non-admin user" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:non_admin) { FactoryGirl.create(:user) }
+
+      before { sign_in non_admin }
+
+      describe "submitting a DELETE request to the Users#destroy action" do
+        before { delete user_path(user) }
         specify { response.should redirect_to(root_url) }
       end
     end
