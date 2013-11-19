@@ -1,4 +1,6 @@
 Cookmeasquid::Application.routes.draw do
+
+  resources :recipes
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   
