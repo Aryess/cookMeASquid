@@ -1,7 +1,8 @@
-<% provide(:title, "Add new recipe") %>
-<h1>Add new recipe</h1>
+<% provide(:title, "Edit recipe") %>
+<h1>Update a recipe</h1>
+
 <div class="row">
-  <div class="span8 offset3">
+	<div class="span8 offset3">
     <%= form_for(@recipe) do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
       
@@ -20,8 +21,7 @@
       <%= f.label :detail, "Content" %>
       <%= f.text_area  :detail %>
       <br />
-      <%= f.submit "Add recipe", class: "btn btn-large btn-primary" %>
+      <%= f.submit "Save changes", class: "btn btn-large btn-primary" %>
     <% end %>
   </div>
 </div>
-    

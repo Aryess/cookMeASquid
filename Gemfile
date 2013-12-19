@@ -18,7 +18,7 @@ end
 group :test do
   gem 'capybara'
   gem 'factory_girl_rails'
-  gem 'rb-inotify', '0.8.8'
+  gem 'rb-inotify', '~>0.9'
   gem 'libnotify', '0.5.9'
 end
 

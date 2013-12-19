@@ -1,2 +1,18 @@
-<h1>Recipes#show</h1>
-<p>Find me in app/views/recipes/show.html.erb</p>
+<% provide(:title, @recipe.name) %>
+<div class="row">
+  <aside class="span4">
+    <section>
+      <h1><%= @recipe.name %></h1>
+      <p><%= @recipe.short %></p>
+      <img itemprop="image" class="photo" src="http://thumbs.ifood.tv/files/Grilled Pepper Steak.jpg" alt="Grilled Pepper Steak picture" title="Grilled Pepper Steak" width="500">
+      <%= @recipe.serving %> pers <br />
+      <%= @recipe.difficulty %> stars
+    </section>
+  </aside>
+  <button type="button" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-star"></span> Star
+</button>
+  	<p class="span6">
+    	<%= @recipe.detail %>
+    </p>
+</div>

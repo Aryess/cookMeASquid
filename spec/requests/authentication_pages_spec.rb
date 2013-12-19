@@ -104,6 +104,20 @@ describe "Authentication" do
           specify { expect(response).to redirect_to(signin_path) }
         end
       end
+
+      describe "in the Recipes controller" do
+        let(:recipe) { FactoryGirl.create(:recipe) }
+
+        describe "visiting the edit page" do
+          before {visit edit_recipe_path(recipe)}
+          it { should have_title('Sign in')}
+        end
+
+        describe "submitting to the update action" do
+          before { put recipe_path(recipe) }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+      end
     end
     
     describe "as wrong user" do
@@ -125,11 +139,27 @@ describe "Authentication" do
     describe "as non-admin user" do
       let(:user) { FactoryGirl.create(:user) }
       let(:non_admin) { FactoryGirl.create(:user) }
+      let(:recipe) { FactoryGirl.create(:recipe)}
 
       before { sign_in non_admin }
 
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }
+        specify { response.should redirect_to(root_url) }
+      end
+
+      describe "visit edit recipe" do
+        before { visit edit_recipe_path(recipe) }
+        it { should_not have_title("Edit") }
+      end
+
+      describe "submitting a PUT request to the Recipes#update action" do
+        before { put recipe_path(recipe) }
+        specify { response.should redirect_to(root_url) }
+      end
+
+      describe "submitting a DELETE request to the Recipes#destroy action" do
+        before { delete recipe_path(recipe) }
         specify { response.should redirect_to(root_url) }
       end
     end

@@ -1,0 +1,8 @@
+<li>
+  <img itemprop="image" class="photo" src="http://thumbs.ifood.tv/files/Grilled Pepper Steak.jpg" alt="Grilled Pepper Steak picture" title="Grilled Pepper Steak" width="100">
+  <%= link_to recipe.name, recipe %>
+  <% if current_user && current_user.admin? %>
+    | <%= link_to "delete", recipe, method: :delete,
+                                  data: { confirm: "You sure?" } %>
+  <% end %>
+</li>
