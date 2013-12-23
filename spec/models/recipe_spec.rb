@@ -28,7 +28,7 @@ Donec auctor luctus porttitor. Nulla facilisi. Ut a eros felis. Donec mauris ips
     end
 
     describe "too long" do
-      before { @recipe.short = "a"*41 }
+      before { @recipe.short = "a"*201 }
       it { should_not be_valid }
     end
   end
