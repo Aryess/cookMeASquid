@@ -1,6 +1,6 @@
 namespace :db do
   desc "Fill database with sample data"
-  task populate: :environment do
+  task populate_users: :environment do
     admin = User.create!(
       name:   "John",
       surname:"Doe",
@@ -25,6 +25,25 @@ namespace :db do
                    login: login,
                    password: password,
                    password_confirmation: password)
+    end
+  end
+  task populate_recipes: :environment do
+    99.times do |n|
+      name  = Faker::Commerce.product_name
+      short = Faker::Lorem.paragraph[0..199]
+      detail= Faker::Lorem.paragraph(5, true, 3)
+      rand(10).times do |i|
+        detail += "<br />"
+        detail += Faker::Lorem.paragraph
+      end
+      difficulty= rand(4)+1
+      serving = rand(3)+1
+      Recipe.create!(short: short,
+                   detail: detail,
+                   difficulty: difficulty,
+                   serving: serving,
+                   name: name
+                   )
     end
   end
 end
