@@ -60,6 +60,9 @@ module Cookmeasquid
     config.assets.version = '1.0'
     
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+
+    # Custom settings
+    RECIPE_PER_PAGE = 4
     
   end
 end

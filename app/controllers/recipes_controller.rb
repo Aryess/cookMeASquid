@@ -3,7 +3,10 @@ class RecipesController < ApplicationController
   before_filter :admin_user,      only: [:new, :edit, :update, :destroy]
 
   def index
-    @recipes = Recipe.paginate(page: params[:page], per_page: 15)
+    @recipes = Recipe.paginate(
+                        page: params[:page],
+                        per_page: Cookmeasquid::Application::RECIPE_PER_PAGE
+                        )
   end
 
   def create

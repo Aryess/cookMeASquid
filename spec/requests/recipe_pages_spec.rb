@@ -10,13 +10,18 @@ describe "Recipe Pages" do
     it { should have_selector('h1', text: 'All recipes')}
 
     describe "pagination" do
-      before(:all) { 30.times { FactoryGirl.create(:recipe)}}
+      before(:all) do
+        (Cookmeasquid::Application::RECIPE_PER_PAGE + 5).times { FactoryGirl.create(:recipe)}
+      end
       after(:all) { Recipe.delete_all }
 
       it {should have_selector('div.pagination')}
 
       it "should list each recipe" do
-        Recipe.paginate(page: 1, per_page: 15).each do |recipe| 
+        Recipe.paginate(
+          page: 1,
+          per_page: Cookmeasquid::Application::RECIPE_PER_PAGE
+          ).each do |recipe|
           page.should have_selector('li', text: recipe.name)
         end
       end
@@ -32,7 +37,7 @@ describe "Recipe Pages" do
           sign_in user
           visit recipes_path
         end
-        
+
         it {should have_link('delete', href: recipe_path(Recipe.first))}
 
         it "should be able to delete a recipe" do
@@ -61,9 +66,9 @@ describe "Recipe Pages" do
 
   describe "new recipe page" do
     let(:user) {FactoryGirl.create(:admin)}
-    before do 
+    before do
       sign_in user
-      visit new_recipe_path 
+      visit new_recipe_path
     end
 
     let(:submit) { "Add recipe" }
@@ -94,7 +99,7 @@ describe "Recipe Pages" do
     let(:user) { FactoryGirl.create(:admin)}
     before do
       sign_in user
-      visit edit_recipe_path(recipe) 
+      visit edit_recipe_path(recipe)
     end
 
     describe "page" do
@@ -103,9 +108,9 @@ describe "Recipe Pages" do
     end
 
     describe "with invalid information" do
-      before do 
+      before do
         fill_in "Difficulty",       with: ""
-        click_button "Save changes" 
+        click_button "Save changes"
       end
 
       it { should have_content('error') }
