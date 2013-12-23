@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "User pages" do
   subject {page}
-  
+
   describe "index" do
     let(:user) { FactoryGirl.create(:user) }
     before do
@@ -15,16 +15,21 @@ describe "User pages" do
 
     describe "pagination" do
 
-      before(:all) { 30.times { FactoryGirl.create(:user) } }
+      before(:all) do
+        (Cookmeasquid::Application::USER_PER_PAGE + 5).times { FactoryGirl.create(:user) }
+      end
       after(:all)  { User.delete_all }
 
       it {should have_selector('div.pagination')}
 
       it "should list each user" do
-        User.paginate(page: 1, per_page: 20).each do |user|
+        User.paginate(
+          page: 1,
+          per_page: Cookmeasquid::Application::USER_PER_PAGE
+          ).each do |user|
           page.should have_selector('li', text: user.login)
         end
-      end 
+      end
     end
 
     describe "delete links" do
@@ -46,37 +51,37 @@ describe "User pages" do
       end
     end
   end
-  
+
   describe "profile page" do
-    
+
     describe "with valid user" do
       let(:user) { FactoryGirl.create(:user) }
       before { visit user_path(user) }
-  
+
       it { should have_content(user.login) }
       it { should have_title(user.login) }
     end
-    
+
     describe "with invalid user" do
       before { visit user_path(-1) }
-  
+
       it { should have_title("Home") }
       it { should have_content("Nothing to see here") }
     end
   end
-  
+
   describe "signup" do
     before { visit signup_path }
     let(:submit) { "Create my account" }
 
     it{should have_content "Sign up"}
     it{should have_title "Sign up"}
-    
+
     describe "with invalid information" do
       it "should not create a user" do
         expect { click_button submit }.not_to change(User, :count)
       end
-      
+
       describe "after submission" do
         before { click_button submit }
 
@@ -99,7 +104,7 @@ describe "User pages" do
       it "should create a user" do
         expect { click_button submit }.to change(User, :count).by(1)
       end
-      
+
       describe "after saving the user" do
         before { click_button submit }
         let(:user) { User.find_by_email('jdoe@example.com') }
@@ -110,7 +115,7 @@ describe "User pages" do
       end
     end
   end
-  
+
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }
     before do
@@ -129,7 +134,7 @@ describe "User pages" do
 
       it { should have_content('error') }
     end
-    
+
     describe "with valid information" do
       let(:new_login)  { "NewName" }
       let(:new_email) { "new@example.com" }
