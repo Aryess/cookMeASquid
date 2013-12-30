@@ -1,11 +1,39 @@
-<% provide(:title, "All recipes")%>
-<h1>All recipes</h1>
+<% if @recipes %>
+	<% provide(:title, "Recipes")%>
+	<h1>Recipes</h1>
+
+	<% if @recipes.empty? %>
+		<p>No recipe found</p>
+	<% end %>
+
+	<%= will_paginate %>
+
+	<ul class="recipes">
+	  <%= render @recipes %>
+	</ul>
+
+	<%= will_paginate %>
+<%
+else %>
+
+	<% provide(:title, "Search a recipe")%>
+	<h1>Tell what do you want !</h1>
+
+	<%= form_tag('/recipes', method: "get") do %>
+
+	  <%= label_tag(:diff, "Cook expertise:") %>
+	  <%= range_field_tag(:diff, nil, in: 1..5) %>
+
+	  <%= label_tag(:serving, "For how many people?:") %>
+	  <%= range_field_tag(:serving, 0, in: 0..10) %>
+
+	  <br />
+	  <%= submit_tag("Teach me !") %>
 
 
-<%= will_paginate %>
+	<% end %>
 
-<ul class="recipes">
-  <%= render @recipes %>
-</ul>
 
-<%= will_paginate %>
+
+
+<% end %>

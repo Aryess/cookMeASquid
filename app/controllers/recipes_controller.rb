@@ -3,10 +3,24 @@ class RecipesController < ApplicationController
   before_filter :admin_user,      only: [:new, :edit, :update, :destroy]
 
   def index
-    @recipes = Recipe.paginate(
-                        page: params[:page],
-                        per_page: Cookmeasquid::Application::RECIPE_PER_PAGE
-                        )
+
+    if (params[:diff] && params[:diff].to_i != 0\
+      && params[:serving] && params[:serving].to_i)
+      if params[:serving].to_i != 0
+        @recipes = Recipe.where("difficulty <= #{params[:diff].to_i}")
+                         .where("serving = #{params[:serving].to_i}")
+                         .paginate(
+                            page: params[:page],
+                            per_page: Cookmeasquid::Application::RECIPE_PER_PAGE
+                            )
+     else
+        @recipes = Recipe.where("difficulty <= #{params[:diff].to_i}")
+                         .paginate(
+                            page: params[:page],
+                            per_page: Cookmeasquid::Application::RECIPE_PER_PAGE
+                            )
+      end
+    end
   end
 
   def create

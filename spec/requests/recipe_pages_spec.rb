@@ -3,11 +3,58 @@ require 'spec_helper'
 describe "Recipe Pages" do
 	subject {page}
 
-  describe "index" do
-    before { visit recipes_path }
+  describe "search page" do
+    before {visit recipes_path}
 
-    it { should have_title('All recipes')}
-    it { should have_selector('h1', text: 'All recipes')}
+    it {should have_title("Search a recipe")}
+    it {should have_selector("input[type=submit][value='Teach me !']")}
+  end
+
+  describe "search engine" do
+    let (:right_recipe) {FactoryGirl.create(:recipe, name: "Right recipe")}
+    let (:wrong_recipe) {FactoryGirl.create(:recipe, name: "Wrong recipe")}
+
+    describe "with difficulty" do
+      before do
+        right_recipe.difficulty = 2
+        wrong_recipe.difficulty = 5
+        right_recipe.save
+        wrong_recipe.save
+        visit recipes_path + "?diff=3&serving=0"
+      end
+
+      it {should have_content(right_recipe.name)}
+      it {should_not have_content(wrong_recipe.name)}
+    end
+
+    describe "with serving" do
+      before do
+        wrong_recipe.serving = 5
+        right_recipe.serving = 2
+        right_recipe.save
+        wrong_recipe.save
+      end
+
+      describe "when serving not matched" do
+        before {visit recipes_path + "?diff=5&serving=3"}
+        it {should have_content("No recipe found")}
+      end
+
+      describe "when matched" do
+        before {visit recipes_path + "?diff=5&serving=2"}
+        it {should have_content(right_recipe.name)}
+        it {should_not have_content(wrong_recipe.name)}
+      end
+    end
+  end
+
+  describe "Result display" do
+    before do
+      visit recipes_path + "?diff=5&serving=0"
+    end
+
+    it { should have_title('Recipes')}
+    it { should have_selector('h1', text: 'Recipes')}
 
     describe "pagination" do
       before(:all) do
@@ -35,7 +82,7 @@ describe "Recipe Pages" do
         let(:user) {FactoryGirl.create(:admin)}
         before do
           sign_in user
-          visit recipes_path
+          visit recipes_path+ "?diff=5&serving=0"
         end
 
         it {should have_link('delete', href: recipe_path(Recipe.first))}
