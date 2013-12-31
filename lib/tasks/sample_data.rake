@@ -1,13 +1,13 @@
 namespace :db do
   desc "Fill database with sample data"
-  task populate_users: :environment do
+  task populate: :environment do
     admin = User.create!(
       name:   "John",
       surname:"Doe",
       email:  "jdoe@gmail.com",
       age: 42,
       login: "Fredo",
-      password: "foobar", 
+      password: "foobar",
       password_confirmation: "foobar"
       )
     admin.toggle!(:admin)
@@ -26,14 +26,12 @@ namespace :db do
                    password: password,
                    password_confirmation: password)
     end
-  end
-  task populate_recipes: :environment do
-    99.times do |n|
+    100.times do |n|
       name  = Faker::Commerce.product_name
       short = Faker::Lorem.paragraph[0..199]
       detail= Faker::Lorem.paragraph(5, true, 3)
       rand(10).times do |i|
-        detail += "<br />"
+        detail += "\n\n"
         detail += Faker::Lorem.paragraph
       end
       difficulty= rand(4)+1
@@ -44,6 +42,20 @@ namespace :db do
                    serving: serving,
                    name: name
                    )
+    end
+    Recipe.all.each do |r|
+      5.times do |i|
+        begin
+          content = Faker::Lorem.sentence
+          rating = rand(3) + 1
+          user = User.find(1+rand(User.count))
+          user.comments.create!(content: content,
+                                rating: rating,
+                                recipe_id: r.id)
+        rescue
+          #Breaking monotony in comments number ;)
+        end
+      end
     end
   end
 end

@@ -100,6 +100,7 @@ describe "Recipe Pages" do
     	before { visit recipe_path(recipe) }
 
     	it { should have_content (recipe.name) }
+      it { should have_selector('h3', text:"Comments")}
     	it { should have_title (recipe.name) }
     end
 
