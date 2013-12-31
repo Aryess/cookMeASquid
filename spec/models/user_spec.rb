@@ -10,9 +10,9 @@ describe User do
     email:  "alfred.dupond@gmail.com",
     age: 34,
     login: "Fredo",
-    password: "foobar", 
+    password: "foobar",
     password_confirmation: "foobar"
-    ) 
+    )
   }
   subject { @user }
 
@@ -27,7 +27,8 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:admin) }
   it { should respond_to(:authenticate) }
-  
+  it { should respond_to(:comments) }
+
   it { should be_valid }
   it { should_not be_admin }
 
@@ -36,7 +37,7 @@ describe User do
       expect do
         User.new(admin: true)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end    
+    end
   end
 
   describe "with admin attribute set to 'true'" do
@@ -53,12 +54,12 @@ describe User do
       before {@user.name = " "}
       it {should_not be_valid}
     end
-    
+
     describe "When too long" do
       before { @user.name = "a" * 51 }
       it { should_not be_valid }
     end
-    
+
     describe "When has incorrect char" do
       it "should be invalid" do
         names = ["use\"uoo", "zz(ehrzer", "ger_ur", "ur$zr", "zerree4e", "utr<rt"]
@@ -69,24 +70,24 @@ describe User do
       end
     end
   end
-  
-  
+
+
    describe "Surname" do
     describe "When not present" do
       before {@user.surname = " "}
       it {should_not be_valid}
     end
-    
+
     describe "when irish" do
       before {@user.surname = "Mc M'achin-truc"}
       it { should be_valid}
-      
+
     end
     describe "When too long" do
       before { @user.surname = "a" * 51 }
       it { should_not be_valid }
     end
-    
+
     describe "When has incorrect char" do
       it "should be invalid" do
         names = ["use\"uoo", "zz(ehrzer", "ger_ur", "ur$zr", "zerree4e", "utr<rt"]
@@ -97,18 +98,18 @@ describe User do
       end
     end
   end
-  
+
   describe "email" do
     describe "When not present" do
       before {@user.email = " "}
       it {should_not be_valid}
     end
-    
+
     describe "When too long" do
       before {@user.email = "a"*255 + "@gmail.com"}
       it {should_not be_valid}
     end
-  
+
     describe "when format is invalid" do
       it "should be invalid" do
         addresses = %w[user@foo,com user_at_foo.org example.user@foo.
@@ -129,7 +130,7 @@ describe User do
         end
       end
     end
-    
+
     describe "when not unique" do
       before do
         user_with_same_email = @user.dup
@@ -138,39 +139,39 @@ describe User do
         user_with_same_email.email = @user.email.upcase
         user_with_same_email.save
       end
-  
+
       it { should_not be_valid }
     end
   end
-  
+
   describe "age" do
     describe "When not present" do
       before {@user.age = " "}
       it {should_not be_valid}
     end
-    
+
     describe "when negative" do
       before {@user.age=-5}
       it {should_not be_valid}
     end
-    
+
     describe "when over 130" do
       before {@user.age=131}
       it {should_not be_valid}
     end
   end
-  
+
   describe "login" do
     describe "When not present" do
       before {@user.name = " "}
       it {should_not be_valid}
     end
-    
+
     describe "When too long" do
       before { @user.name = "a" * 51 }
       it { should_not be_valid }
     end
-    
+
     describe "When has incorrect char" do
       it "should be invalid" do
         logins = ["use\"uoo", "zz(ehrzer", "ger'ur",  "uutùu", "utr<rt", "hurr durr"]
@@ -180,21 +181,21 @@ describe User do
         end
       end
     end
-    
+
     describe "when not unique" do
       before do
         user_with_same_login = @user.dup
-        user_with_same_login.email = "change" + @user.email 
+        user_with_same_login.email = "change" + @user.email
         user_with_same_login.login = @user.login.upcase
         result = user_with_same_login.save
         Rails.logger.debug "Anchor " + result.to_s
         Rails.logger.debug user_with_same_login.inspect
       end
-  
+
       it { should_not be_valid, "User: #{@user.login}" }
     end
   end
-  
+
   describe "password" do
     describe "when not present" do
       before { @user = User.new(
@@ -203,40 +204,40 @@ describe User do
         email:  "alfred.dupond@gmail.com",
         age: 34,
         login: "Fredo",
-        password: " ", 
+        password: " ",
         password_confirmation: " "
-        ) 
+        )
       }
       it { should_not be_valid }
     end
-    
+
     describe "when does not match " do
       before { @user.password_confirmation = @user.password + "nope" }
       it {should_not be_valid}
     end
-    
+
     describe "with a password that's too short" do
       before { @user.password = @user.password_confirmation = "a" * 5 }
       it { should be_invalid }
     end
-  
+
     describe "return value of authenticate method" do
       before { @user.save }
       let(:found_user) { User.find_by_email(@user.email) }
-  
+
       describe "with valid password" do
         it { should eq found_user.authenticate(@user.password) }
       end
-  
+
       describe "with invalid password" do
         let(:user_for_invalid_password) { found_user.authenticate("invalid") }
-  
+
         it { should_not eq user_for_invalid_password }
         specify { expect(user_for_invalid_password).to be_false }
       end
     end
   end
-  
+
   describe "remember token" do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
