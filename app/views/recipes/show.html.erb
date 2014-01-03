@@ -14,15 +14,34 @@
   </pre>
 </div>
   <h3>Comments:</h3>
+  <% if current_user == nil %>
+    <p>Sign in to post a comment</p>
+  <% else %>
+    <%= form_for(@comment) do |f| %>
+
+    <% end %>
+  <% end %>
   <% if @recipe.comments.empty? %>
     <p>No comment yet</p>
   <% else %>
+  <button type="button" class="btn btn-default btn-lg">
+  <span class="glyphicon glyphicon-star"></span> Star
+</button>
+
     <ul>
+      <hr />
       <% @recipe.comments.each do |c| %>
-      <li>
-      <%= c.content %> <br />
-      by <%= c.user.login %>
+      <li id="<%= c.id %>">
+        <%= link_to gravatar_for(c.user), c.user %>
+        <span class="user">
+          <%= link_to c.user.login, c.user %>
+        </span>
+        <div class="content">{<%= raw "<span class='glyphicon glyphicon-star'></span>" * c.rating %><%= "." * (5-c.rating) %> } <%=c.content %></div>
+        <span class="timestamp">
+          Posted <%= time_ago_in_words(c.created_at) %> ago.
+        </span>
       </li>
+      <hr />
       <% end %>
     </ul>
   <% end %>

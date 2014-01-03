@@ -102,6 +102,19 @@ describe "Recipe Pages" do
     	it { should have_content (recipe.name) }
       it { should have_selector('h3', text:"Comments")}
     	it { should have_title (recipe.name) }
+      it { should_not have_content("Post a comment")}
+      it { should have_content("Sign in to post a comment")}
+
+      describe "signed in user" do
+        let(:user) { FactoryGirl.create(:user) }
+        before do
+          sign_in user
+          visit recipe_path(recipe)
+          end
+        it { should have_content('Post a comment')}
+        it { should_not have_content("Sign in to post a comment")}
+        it { should have_selector('input', text: "Post")}
+      end
     end
 
     describe "with invalid recipe" do
