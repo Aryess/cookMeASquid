@@ -40,6 +40,7 @@ class RecipesController < ApplicationController
   def show
     begin
       @recipe ||= Recipe.find(params[:id])
+      @comment = current_user.comments.build
     rescue
       flash[:error] = "Nothing to see here!"
       redirect_to root_path
